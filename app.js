@@ -9,18 +9,27 @@ const mapBoxUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/Atlanta.jso
 
 
 request({ url: darkSkyUrl, json: true }, (error, response) => {
-  const currently = response.body.currently
-  const summary = response.body.daily.data[0].summary
-  console.log(`Today's forecast: ${summary}`)
-  console.log(`It is currently ${currently.temperature} degrees outside. There is a ${currently.precipProbability}% chance of rain.`)
+  if (error) {
+    console.log(`Unable to connect to weather service!`)
+  } else if (response.body.error) {
+    console.log(`Unable to find location!`)
+  } else {
+    const currently = response.body.currently
+    const summary = response.body.daily.data[0].summary
+    console.log(`Today's forecast: ${summary}`)
+    console.log(`It is currently ${currently.temperature} degrees outside. There is a ${currently.precipProbability}% chance of rain.`)
+  }
 })
-
-// Geocoding
 
 request({ url: mapBoxUrl, json: true }, (error, response) => {
-  const lat = response.body.features[0].center[1]
-  const lng = response.body.features[0].center[0]
-  const placeName = response.body.features[0].place_name
-  console.log(`${placeName} coordinates: (${lat}, ${lng})`)
+  if (error) {
+    console.log(`Unable to connect to geolocation service!`)
+  } else if (response.body.features.length === 0) {
+    console.log(`Unable to find location!`)
+  } else {
+    const lat = response.body.features[0].center[1]
+    const lng = response.body.features[0].center[0]
+    const placeName = response.body.features[0].place_name
+    console.log(`${placeName} coordinates: (${lat}, ${lng})`)
+  }
 })
-
