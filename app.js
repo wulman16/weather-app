@@ -13,7 +13,7 @@ if (location) {
       return console.log(error)
     }
   
-    weather(geoData.lat, geoData.lng, (error, weatherData) => {
+    weather(geoData, (error, weatherData) => {
       if (error) {
         return console.log(error)
       }
@@ -21,4 +21,6 @@ if (location) {
       console.log(weatherData)
     })
   })
+} else {
+  console.log(`Please provide a location!`)
 }
