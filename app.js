@@ -1,4 +1,3 @@
-const request = require(`request`)
 require(`dotenv`).config()
 const geocode = require(`./utils/geocode`)
 const weather = require(`./utils/weather`)
@@ -6,12 +5,20 @@ const weather = require(`./utils/weather`)
 DARKSKY_API_KEY = process.env.DARKSKY_API_KEY
 MAPBOX_API_KEY = process.env.MAPBOX_API_KEY
 
-geocode(`atlanta`, (error, data) => {
-  console.log(`Error`, error)
-  console.log(`Data`, data)
-})
+const location = process.argv[2]
 
-weather(33.7491, -84.3902, (error, data) => {
-  console.log(`Error`, error)
-  console.log(`Data`, data)
-})
+if (location) {
+  geocode(location, (error, geoData) => {
+    if (error) {
+      return console.log(error)
+    }
+  
+    weather(geoData.lat, geoData.lng, (error, weatherData) => {
+      if (error) {
+        return console.log(error)
+      }
+      console.log(geoData.placeName)
+      console.log(weatherData)
+    })
+  })
+}

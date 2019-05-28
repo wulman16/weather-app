@@ -8,10 +8,11 @@ const weather = (lat, lng, callback) => {
     } else if (response.body.error) {
       callback(`Unable to find location! Try another search.`)
     } else {
-      callback(undefined, {
-        currently: response.body.currently,
-        summary: response.body.daily.data[0].summary
-      })
+      const temp = response.body.currently.temperature
+      const precipChance = response.body.currently.precipProbability
+      const precip = temp >= 32 ? `rain` : `snow`
+      const summary = response.body.daily.data[0].summary
+      callback(undefined, `${summary} It is currently ${temp} degrees outside. There is a ${precipChance}% chance of ${precip}.`)
     }
   })
 }
